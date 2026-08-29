@@ -1,0 +1,29 @@
+{
+  "name": "modern-rgb-github-readme-stats",
+  "version": "1.0.0",
+  "description": "Dynamic GitHub Readme Stats with Modern RGB Animated Neon Glow themes, Glassmorphism, and Live Customizer",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": [
+    "github-readme-stats",
+    "github",
+    "stats",
+    "svg",
+    "rgb-theme",
+    "neon",
+    "glassmorphism",
+    "profile-readme"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
+
