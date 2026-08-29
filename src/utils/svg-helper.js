@@ -35,8 +35,19 @@ function formatNumber(num) {
   return num.toString();
 }
 
-function calculateRank({ totalStars, totalCommits, totalPRs, totalIssues, followers }) {
-  // Enhanced weighting model
+function calculateRank({ totalStars, totalCommits, totalPRs, totalIssues, followers, username }, customRank = null) {
+  // 👑 JALUR PEMBUAT / CREATOR PRIVILEGE (Owner: Novazeb)
+  if (customRank) {
+    const r = customRank.toUpperCase();
+    const percentMap = { "S+": 99, "S": 95, "A++": 90, "A+": 80, "A": 70, "B+": 60, "B": 50 };
+    return { rank: r, percent: percentMap[r] || 99, score: 99999 };
+  }
+
+  if (username && username.toLowerCase() === "novazeb") {
+    return { rank: "S+", percent: 99, score: 99999 };
+  }
+
+  // Standard Score Calculation
   const score = (
     totalStars * 4 +
     totalCommits * 1.5 +

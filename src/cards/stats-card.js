@@ -9,11 +9,12 @@ function renderStatsCard(stats, options = {}) {
     custom_title = "",
     hide_border = false,
     border_radius = 16,
-    show_followers = true
+    show_followers = true,
+    custom_rank = null
   } = options;
 
   const theme = getTheme(themeName);
-  const { rank, percent } = calculateRank(stats);
+  const { rank, percent } = calculateRank(stats, custom_rank);
 
   const title = custom_title || `${stats.name || stats.username}'s GitHub Stats`;
   const width = hide_rank ? 400 : 495;

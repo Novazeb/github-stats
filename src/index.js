@@ -44,7 +44,9 @@ app.get("/api/stats", async (req, res) => {
     hide_border = "false",
     border_radius = "16",
     show_followers = "true",
-    include_all_commits = "true"
+    include_all_commits = "true",
+    rank,
+    custom_rank
   } = req.query;
 
   res.setHeader("Content-Type", "image/svg+xml");
@@ -63,7 +65,8 @@ app.get("/api/stats", async (req, res) => {
       custom_title,
       hide_border: hide_border === "true",
       border_radius: parseInt(border_radius, 10) || 16,
-      show_followers: show_followers !== "false"
+      show_followers: show_followers !== "false",
+      custom_rank: custom_rank || rank || null
     });
 
     return res.send(svg);
