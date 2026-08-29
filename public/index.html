@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern RGB GitHub Readme Stats Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge-rgb">✨ ULTRA MODERN RGB GLOW ✨</div>
+      <h1 class="gradient-title">GitHub Readme Stats</h1>
+      <p class="subtitle">Buat kartu statistik profil GitHub dengan efek animasi <strong>RGB Chroma, Neon Glow & Glassmorphism</strong> yang memukau!</p>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="app-layout">
+      <!-- Control Panel (Left) -->
+      <div class="card glass-panel control-panel">
+        <h2 class="panel-title">⚙️ Konfigurasi Kartu</h2>
+
+        <div class="form-group">
+          <label for="username">GitHub Username <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">@</span>
+            <input type="text" id="username" placeholder="misal: torvalds, anuraghazra" value="anuraghazra">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="themeSelect">Pilih Tema RGB</label>
+          <select id="themeSelect">
+            <option value="modern-rgb" selected>🌈 Modern RGB (Chroma Glow)</option>
+            <option value="neon-cyberpunk">⚡ Neon Cyberpunk (Cyan & Pink)</option>
+            <option value="matrix-rgb">🟢 Matrix Emerald RGB</option>
+            <option value="sunset-chroma">🌅 Sunset Chroma (Violet & Peach)</option>
+            <option value="aurora-rgb">🌌 Aurora Borealis (Aqua & Teal)</option>
+            <option value="tokyo-night-rgb">🗼 Tokyo Night RGB</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="customTitle">Judul Kustom (Opsional)</label>
+          <input type="text" id="customTitle" placeholder="misal: My Developer Activity">
+        </div>
+
+        <div class="form-group">
+          <label for="repoName">Repository Name (Untuk Pin Repo)</label>
+          <input type="text" id="repoName" placeholder="misal: github-readme-stats" value="github-readme-stats">
+        </div>
+
+        <div class="form-group">
+          <label>Opsi Tambahan</label>
+          <div class="checkbox-grid">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="showIcons" checked>
+              <span class="checkmark"></span>
+              Tampilkan Icon
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="showRank" checked>
+              <span class="checkmark"></span>
+              Tampilkan Rank Grade
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="compactLangs">
+              <span class="checkmark"></span>
+              Layout Compact Languages
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="showFollowers" checked>
+              <span class="checkmark"></span>
+              Tampilkan Followers
+            </label>
+          </div>
+        </div>
+
+        <button id="btnGenerate" class="btn-rgb-glow">
+          <span>⚡ Perbarui Preview</span>
+        </button>
+      </div>
+
+      <!-- Live Preview Area (Right) -->
+      <div class="card glass-panel preview-panel">
+        <div class="preview-header">
+          <h2 class="panel-title">👁️ Live Preview</h2>
+          <div class="preview-tabs">
+            <button class="tab-btn active" data-tab="stats">Stats Card</button>
+            <button class="tab-btn" data-tab="langs">Top Languages</button>
+            <button class="tab-btn" data-tab="both">Combo (Side-by-Side)</button>
+            <button class="tab-btn" data-tab="pin">Pin Repo</button>
+          </div>
+        </div>
+
+        <!-- Card Display Box -->
+        <div class="preview-display">
+          <div id="statsPreviewContainer" class="preview-item">
+            <img id="statsImg" src="" alt="Stats Preview" class="card-img" />
+          </div>
+          <div id="langsPreviewContainer" class="preview-item hidden">
+            <img id="langsImg" src="" alt="Languages Preview" class="card-img" />
+          </div>
+          <div id="comboPreviewContainer" class="preview-item combo-view hidden">
+            <img id="comboStatsImg" src="" alt="Stats Preview" class="card-img" />
+            <img id="comboLangsImg" src="" alt="Languages Preview" class="card-img" />
+          </div>
+          <div id="pinPreviewContainer" class="preview-item hidden">
+            <img id="pinImg" src="" alt="Pin Repo Preview" class="card-img" />
+          </div>
+        </div>
+
+        <!-- Code Snippet Output -->
+        <div class="code-export-section">
+          <div class="code-header">
+            <span>📋 Salin Kode untuk Profil GitHub Anda</span>
+            <div class="code-format-toggles">
+              <button class="format-btn active" data-format="markdown">Markdown</button>
+              <button class="format-btn" data-format="html">HTML</button>
+              <button class="format-btn" data-format="url">SVG URL</button>
+            </div>
+          </div>
+          <div class="code-box-wrapper">
+            <pre><code id="codeOutput">Memuat kode...</code></pre>
+            <button id="btnCopy" class="btn-copy">Salin</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ready to Use GitHub Readme Guide -->
+    <div class="card glass-panel profile-guide">
+      <h2 class="panel-title">🚀 Cara Menggunakan di GitHub README.md</h2>
+      <p class="guide-desc">Cukup tempelkan kode Markdown berikut ke dalam file <code>README.md</code> di repository profil GitHub Anda (contoh: <code>username/username</code>):</p>
+      
+      <div class="guide-code-block">
+        <pre><code>### ⚡ My GitHub Statistics
+
+&lt;p align="center"&gt;
+  &lt;a href="https://github.com/anuraghazra/github-readme-stats"&gt;
+    &lt;img src="https://github-readme-stats.vercel.app/api?username=<span class="highlight">YOUR_USERNAME</span>&theme=radical&show_icons=true&bg_color=0b0f19&border_color=00f2fe&title_color=38bdf8&icon_color=00f2fe&text_color=e2e8f0" alt="GitHub Stats" /&gt;
+  &lt;/a&gt;
+  &lt;a href="https://github.com/anuraghazra/github-readme-stats"&gt;
+    &lt;img src="https://github-readme-stats.vercel.app/api/top-langs/?username=<span class="highlight">YOUR_USERNAME</span>&theme=radical&layout=compact&bg_color=0b0f19&border_color=ff007f&title_color=fa709a&text_color=e2e8f0" alt="Top Languages" /&gt;
+  &lt;/a&gt;
+&lt;/p&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
