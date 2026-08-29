@@ -36,39 +36,37 @@ function formatNumber(num) {
 }
 
 function calculateRank({ totalStars, totalCommits, totalPRs, totalIssues, followers, username }, customRank = null) {
-  // 👑 JALUR PEMBUAT / CREATOR PRIVILEGE (Owner: Novazeb / NovaZebua)
-  if (customRank && customRank.toLowerCase() !== "auto") {
-    let r = customRank.toUpperCase().replace(/\s+/g, "+");
-    if (r === "S") r = "S+";
-    const percentMap = { "S+": 99, "S": 95, "A++": 90, "A+": 80, "A": 70, "B+": 60, "B": 50 };
-    return { rank: r, percent: percentMap[r] || 99, score: 99999 };
+  const u = (username || "").toLowerCase().trim();
+  const isCreator = (u === "novazeb" || u === "novazebua" || u.includes("novazeb"));
+
+  // 👑 EKSKLUSIF KHUSUS NOVAZEBUA (Hanya Nova yang Bisa S+ / S Tier)
+  if (isCreator) {
+    let r = "S+";
+    if (customRank && customRank.toLowerCase() !== "auto") {
+      r = customRank.toUpperCase().replace(/\s+/g, "+");
+    }
+    return { rank: r, percent: 99, score: 99999 };
   }
 
-  const u = (username || "").toLowerCase();
-  if (u.includes("novazeb") || u.includes("novazebua") || u.includes("nova")) {
-    return { rank: "S+", percent: 99, score: 99999 };
-  }
-
-  // Standard Score Calculation
+  // 🚫 UNTUK USER LAIN: Dibatasi maksimal A+ ke bawah (Tidak ada yang bisa S Tier selain Creator)
   const score = (
-    totalStars * 4 +
-    totalCommits * 1.5 +
-    totalPRs * 3.5 +
-    totalIssues * 1.5 +
-    followers * 2
+    (totalStars || 0) * 4 +
+    (totalCommits || 0) * 1.5 +
+    (totalPRs || 0) * 3.5 +
+    (totalIssues || 0) * 1.5 +
+    (followers || 0) * 2
   );
 
   let rank = "C";
-  let percent = 50;
+  let percent = 30;
 
-  if (score >= 10000) { rank = "S+"; percent = 99; }
-  else if (score >= 5000) { rank = "S"; percent = 95; }
-  else if (score >= 2500) { rank = "A++"; percent = 90; }
-  else if (score >= 1200) { rank = "A+"; percent = 80; }
-  else if (score >= 600) { rank = "A"; percent = 70; }
-  else if (score >= 300) { rank = "B+"; percent = 60; }
-  else if (score >= 100) { rank = "B"; percent = 50; }
-  else { rank = "B-"; percent = 40; }
+  if (score >= 5000) { rank = "A+"; percent = 85; }
+  else if (score >= 2500) { rank = "A"; percent = 75; }
+  else if (score >= 1000) { rank = "A-"; percent = 65; }
+  else if (score >= 400) { rank = "B+"; percent = 55; }
+  else if (score >= 150) { rank = "B"; percent = 45; }
+  else if (score >= 50) { rank = "B-"; percent = 35; }
+  else { rank = "C"; percent = 25; }
 
   return { rank, percent, score };
 }
