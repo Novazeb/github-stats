@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Elements
   const usernameInput = document.getElementById("username");
   const themeSelect = document.getElementById("themeSelect");
+  const rankSelect = document.getElementById("rankSelect");
   const customTitleInput = document.getElementById("customTitle");
   const repoNameInput = document.getElementById("repoName");
   const showIconsCheck = document.getElementById("showIcons");
@@ -43,8 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const showIcons = showIconsCheck.checked;
     const showFollowers = showFollowersCheck.checked;
     const title = customTitleInput.value.trim();
+    const rank = rankSelect ? rankSelect.value : "S+";
 
     let url = `${getBaseUrl()}/api/stats?username=${user}&theme=${theme}`;
+    if (rank && rank !== "auto") url += `&rank=${encodeURIComponent(rank)}`;
     if (hideRank) url += `&hide_rank=true`;
     if (!showIcons) url += `&show_icons=false`;
     if (!showFollowers) url += `&show_followers=false`;

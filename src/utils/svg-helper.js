@@ -36,14 +36,15 @@ function formatNumber(num) {
 }
 
 function calculateRank({ totalStars, totalCommits, totalPRs, totalIssues, followers, username }, customRank = null) {
-  // 👑 JALUR PEMBUAT / CREATOR PRIVILEGE (Owner: Novazeb)
-  if (customRank) {
+  // 👑 JALUR PEMBUAT / CREATOR PRIVILEGE (Owner: Novazeb / NovaZebua)
+  if (customRank && customRank.toLowerCase() !== "auto") {
     const r = customRank.toUpperCase();
     const percentMap = { "S+": 99, "S": 95, "A++": 90, "A+": 80, "A": 70, "B+": 60, "B": 50 };
     return { rank: r, percent: percentMap[r] || 99, score: 99999 };
   }
 
-  if (username && username.toLowerCase() === "novazeb") {
+  const u = (username || "").toLowerCase();
+  if (u.includes("novazeb") || u.includes("novazebua") || u === "nova") {
     return { rank: "S+", percent: 99, score: 99999 };
   }
 
