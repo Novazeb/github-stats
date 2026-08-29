@@ -30,11 +30,11 @@ Salin kode Markdown di bawah ini dan tempelkan ke file `README.md` repository pr
 
 ```markdown
 <p align="center">
-  <a href="https://github.com/anuraghazra/github-readme-stats">
-    <img src="https://github-readme-stats.vercel.app/api?username=USERNAME_ANDA&show_icons=true&theme=radical&bg_color=0b0f19&border_color=00f2fe&title_color=38bdf8&icon_color=00f2fe&text_color=e2e8f0" alt="GitHub Stats" />
+  <a href="https://github.com/Novazeb/github-stats">
+    <img src="https://github-stats-gray-three.vercel.app/api/stats?username=USERNAME_ANDA&theme=modern-rgb&v=2" alt="GitHub Stats" />
   </a>
-  <a href="https://github.com/anuraghazra/github-readme-stats">
-    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=USERNAME_ANDA&layout=compact&theme=radical&bg_color=0b0f19&border_color=ff007f&title_color=fa709a&text_color=e2e8f0" alt="Top Languages" />
+  <a href="https://github.com/Novazeb/github-stats">
+    <img src="https://github-stats-gray-three.vercel.app/api/top-langs/?username=USERNAME_ANDA&layout=compact&theme=modern-rgb&v=2" alt="Top Languages" />
   </a>
 </p>
 ```
