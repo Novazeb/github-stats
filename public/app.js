@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildStatsUrl() {
-    const user = encodeURIComponent(usernameInput.value.trim() || "anuraghazra");
+    const user = encodeURIComponent(usernameInput.value.trim() || "Novazeb");
     const theme = themeSelect.value;
     const hideRank = !showRankCheck.checked;
     const showIcons = showIconsCheck.checked;
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildLangsUrl() {
-    const user = encodeURIComponent(usernameInput.value.trim() || "anuraghazra");
+    const user = encodeURIComponent(usernameInput.value.trim() || "Novazeb");
     const theme = themeSelect.value;
     const layout = compactLangsCheck.checked ? "compact" : "normal";
 
@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildPinUrl() {
-    const user = encodeURIComponent(usernameInput.value.trim() || "anuraghazra");
-    const repo = encodeURIComponent(repoNameInput.value.trim() || "github-readme-stats");
+    const user = encodeURIComponent(usernameInput.value.trim() || "Novazeb");
+    const repo = encodeURIComponent(repoNameInput.value.trim() || "github-stats");
     const theme = themeSelect.value;
 
     return `${getBaseUrl()}/api/pin?username=${user}&repo=${repo}&theme=${theme}`;
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const statsUrl = buildStatsUrl();
     const langsUrl = buildLangsUrl();
     const pinUrl = buildPinUrl();
-    const username = usernameInput.value.trim() || "anuraghazra";
+    const username = usernameInput.value.trim() || "Novazeb";
 
     let code = "";
 
