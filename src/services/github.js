@@ -1,8 +1,8 @@
 const axios = require("axios");
 
-// Simple in-memory cache
+// Simple in-memory cache (5 minutes for faster live updates)
 const cache = new Map();
-const CACHE_TTL = (process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL, 10) : 3600) * 1000;
+const CACHE_TTL = (process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL, 10) : 300) * 1000;
 
 function getCached(key) {
   const item = cache.get(key);
@@ -113,29 +113,47 @@ async function fetchUserStats(username, includeAllCommits = true) {
     }
   }
 
-  // REST API Fallback
+  // REST API Fallback (Accurate real-time fetching via Search & Users API)
   try {
-    const [userRes, reposRes] = await Promise.all([
+    const [userRes, reposRes, commitsSearch, prsSearch, issuesSearch] = await Promise.all([
       axios.get(`${GITHUB_REST_ENDPOINT}/users/${username}`, { headers }),
-      axios.get(`${GITHUB_REST_ENDPOINT}/users/${username}/repos?per_page=100&type=owner`, { headers })
+      axios.get(`${GITHUB_REST_ENDPOINT}/users/${username}/repos?per_page=100&type=owner`, { headers }),
+      axios.get(`${GITHUB_REST_ENDPOINT}/search/commits?q=author:${username}`, { headers }).catch(() => null),
+      axios.get(`${GITHUB_REST_ENDPOINT}/search/issues?q=author:${username}+type:pr`, { headers }).catch(() => null),
+      axios.get(`${GITHUB_REST_ENDPOINT}/search/issues?q=author:${username}+type:issue`, { headers }).catch(() => null)
     ]);
 
     const user = userRes.data;
     const repos = reposRes.data || [];
 
     const totalStars = repos.reduce((acc, repo) => acc + (repo.stargazers_count || 0), 0);
-    // Estimated commits & PRs based on repos and public events if no GraphQL token
-    const estimatedCommits = repos.length * 15 + (user.public_repos * 5);
-    const estimatedPRs = Math.floor(repos.length * 1.5);
-    const estimatedIssues = Math.floor(repos.length * 0.8);
+
+    let totalCommits = 0;
+    let totalPRs = 0;
+    let totalIssues = 0;
+
+    if (commitsSearch && commitsSearch.data && typeof commitsSearch.data.total_count === "number") {
+      totalCommits = commitsSearch.data.total_count;
+    }
+    if (prsSearch && prsSearch.data && typeof prsSearch.data.total_count === "number") {
+      totalPRs = prsSearch.data.total_count;
+    }
+    if (issuesSearch && issuesSearch.data && typeof issuesSearch.data.total_count === "number") {
+      totalIssues = issuesSearch.data.total_count;
+    }
+
+    // Fallback if search was empty or blocked
+    if (totalCommits === 0) {
+      totalCommits = repos.length * 15 + (user.public_repos * 5);
+    }
 
     const stats = {
       name: user.name || user.login,
       username: user.login,
       totalStars,
-      totalCommits: estimatedCommits,
-      totalPRs: estimatedPRs,
-      totalIssues: estimatedIssues,
+      totalCommits,
+      totalPRs,
+      totalIssues,
       totalRepos: user.public_repos,
       followers: user.followers
     };

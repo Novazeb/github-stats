@@ -50,7 +50,7 @@ app.get("/api/stats", async (req, res) => {
   } = req.query;
 
   res.setHeader("Content-Type", "image/svg+xml");
-  res.setHeader("Cache-Control", "public, max-age=1800, s-maxage=1800, stale-while-revalidate=86400");
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=600");
 
   if (!username) {
     return res.status(400).send(renderErrorCard("Parameter 'username' is required."));
@@ -92,7 +92,7 @@ app.get("/api/top-langs", async (req, res) => {
   } = req.query;
 
   res.setHeader("Content-Type", "image/svg+xml");
-  res.setHeader("Cache-Control", "public, max-age=1800, s-maxage=1800, stale-while-revalidate=86400");
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=600");
 
   if (!username) {
     return res.status(400).send(renderErrorCard("Parameter 'username' is required."));
@@ -131,7 +131,7 @@ app.get("/api/pin", async (req, res) => {
   } = req.query;
 
   res.setHeader("Content-Type", "image/svg+xml");
-  res.setHeader("Cache-Control", "public, max-age=1800, s-maxage=1800, stale-while-revalidate=86400");
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=600");
 
   if (!username || !repo) {
     return res.status(400).send(renderErrorCard("Parameters 'username' and 'repo' are required."));
