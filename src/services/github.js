@@ -113,12 +113,12 @@ async function fetchUserStats(username, includeAllCommits = true) {
     }
   }
 
-  // REST API Fallback (Accurate real-time fetching via Search & Users API)
+  // REST API Fallback (Accurate real-time fetching via Contributions, Search & Users API)
   try {
-    const [userRes, reposRes, commitsSearch, prsSearch, issuesSearch] = await Promise.all([
+    const [userRes, reposRes, contribRes, prsSearch, issuesSearch] = await Promise.all([
       axios.get(`${GITHUB_REST_ENDPOINT}/users/${username}`, { headers }),
       axios.get(`${GITHUB_REST_ENDPOINT}/users/${username}/repos?per_page=100&type=owner`, { headers }),
-      axios.get(`${GITHUB_REST_ENDPOINT}/search/commits?q=author:${username}`, { headers }).catch(() => null),
+      axios.get(`https://github-contributions-api.jogruber.de/v4/${username}?y=all`, { timeout: 4000 }).catch(() => null),
       axios.get(`${GITHUB_REST_ENDPOINT}/search/issues?q=author:${username}+type:pr`, { headers }).catch(() => null),
       axios.get(`${GITHUB_REST_ENDPOINT}/search/issues?q=author:${username}+type:issue`, { headers }).catch(() => null)
     ]);
@@ -129,12 +129,14 @@ async function fetchUserStats(username, includeAllCommits = true) {
     const totalStars = repos.reduce((acc, repo) => acc + (repo.stargazers_count || 0), 0);
 
     let totalCommits = 0;
+    if (contribRes && contribRes.data && contribRes.data.total) {
+      // Sum all lifetime contributions across all years from GitHub contribution calendar
+      totalCommits = Object.values(contribRes.data.total).reduce((a, b) => a + b, 0);
+    }
+
     let totalPRs = 0;
     let totalIssues = 0;
 
-    if (commitsSearch && commitsSearch.data && typeof commitsSearch.data.total_count === "number") {
-      totalCommits = commitsSearch.data.total_count;
-    }
     if (prsSearch && prsSearch.data && typeof prsSearch.data.total_count === "number") {
       totalPRs = prsSearch.data.total_count;
     }
@@ -142,9 +144,14 @@ async function fetchUserStats(username, includeAllCommits = true) {
       totalIssues = issuesSearch.data.total_count;
     }
 
-    // Fallback if search was empty or blocked
+    // Fallback if contributions API was unreachable
     if (totalCommits === 0) {
-      totalCommits = repos.length * 15 + (user.public_repos * 5);
+      const commitSearch = await axios.get(`${GITHUB_REST_ENDPOINT}/search/commits?q=author:${username}`, { headers }).catch(() => null);
+      if (commitSearch && commitSearch.data && commitSearch.data.total_count) {
+        totalCommits = commitSearch.data.total_count;
+      } else {
+        totalCommits = repos.length * 15 + (user.public_repos * 5);
+      }
     }
 
     const stats = {
