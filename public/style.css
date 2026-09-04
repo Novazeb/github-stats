@@ -345,9 +345,18 @@ select option {
 
 .combo-view {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 16px;
+  flex-wrap: nowrap;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.combo-view .card-img {
+  max-width: 49%;
+  height: auto;
+  object-fit: contain;
 }
 
 .card-img {

@@ -55,10 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return url;
   }
 
-  function buildLangsUrl() {
+  function buildLangsUrl(forceCompact = false) {
     const user = encodeURIComponent(usernameInput.value.trim() || "Novazeb");
     const theme = themeSelect.value;
-    const layout = compactLangsCheck.checked ? "compact" : "normal";
+    const layout = (forceCompact || compactLangsCheck.checked) ? "compact" : "normal";
 
     let url = `${getBaseUrl()}/api/top-langs?username=${user}&theme=${theme}&layout=${layout}`;
     return url;
@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updatePreviews() {
     const statsUrl = buildStatsUrl();
     const langsUrl = buildLangsUrl();
+    const comboLangsUrl = buildLangsUrl(true);
     const pinUrl = buildPinUrl();
 
     // Cache busting for smooth live refresh
@@ -82,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     statsImg.src = `${statsUrl}&_t=${time}`;
     langsImg.src = `${langsUrl}&_t=${time}`;
     comboStatsImg.src = `${statsUrl}&_t=${time}`;
-    comboLangsImg.src = `${langsUrl}&_t=${time}`;
+    comboLangsImg.src = `${comboLangsUrl}&_t=${time}`;
     pinImg.src = `${pinUrl}&_t=${time}`;
 
     updateCodeSnippet();
@@ -91,8 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCodeSnippet() {
     const statsUrl = buildStatsUrl();
     const langsUrl = buildLangsUrl();
+    const comboLangsUrl = buildLangsUrl(true);
     const pinUrl = buildPinUrl();
     const username = usernameInput.value.trim() || "Novazeb";
+    const isCombo = (currentTab === "combo" || currentTab === "both");
 
     let code = "";
 
@@ -101,25 +104,25 @@ document.addEventListener("DOMContentLoaded", () => {
         code = `[![${username}'s GitHub Stats](${statsUrl})](https://github.com/${username})`;
       } else if (currentTab === "langs") {
         code = `[![Top Langs](${langsUrl})](https://github.com/${username})`;
-      } else if (currentTab === "combo") {
-        code = `<p align="center">\n  <a href="https://github.com/${username}">\n    <img src="${statsUrl}" alt="${username}'s GitHub Stats" />\n  </a>\n  <a href="https://github.com/${username}">\n    <img src="${langsUrl}" alt="Top Languages" />\n  </a>\n</p>`;
+      } else if (isCombo) {
+        code = `<p align="center">\n  <a href="https://github.com/${username}">\n    <img src="${statsUrl}" alt="${username}'s GitHub Stats" />\n  </a>\n  <a href="https://github.com/${username}">\n    <img src="${comboLangsUrl}" alt="Top Languages" />\n  </a>\n</p>`;
       } else if (currentTab === "pin") {
-        code = `[![Repo Card](${pinUrl})](https://github.com/${username}/${repoNameInput.value.trim() || "github-readme-stats"})`;
+        code = `[![Repo Card](${pinUrl})](https://github.com/${username}/${repoNameInput.value.trim() || "github-stats"})`;
       }
     } else if (currentFormat === "html") {
       if (currentTab === "stats") {
         code = `<a href="https://github.com/${username}"><img src="${statsUrl}" alt="${username}'s GitHub Stats" /></a>`;
       } else if (currentTab === "langs") {
         code = `<a href="https://github.com/${username}"><img src="${langsUrl}" alt="Top Languages" /></a>`;
-      } else if (currentTab === "combo") {
-        code = `<div align="center">\n  <a href="https://github.com/${username}"><img src="${statsUrl}" alt="Stats" /></a>\n  <a href="https://github.com/${username}"><img src="${langsUrl}" alt="Top Languages" /></a>\n</div>`;
+      } else if (isCombo) {
+        code = `<div align="center">\n  <a href="https://github.com/${username}"><img src="${statsUrl}" alt="Stats" /></a>\n  <a href="https://github.com/${username}"><img src="${comboLangsUrl}" alt="Top Languages" /></a>\n</div>`;
       } else if (currentTab === "pin") {
         code = `<a href="https://github.com/${username}/${repoNameInput.value.trim()}"><img src="${pinUrl}" alt="Repo" /></a>`;
       }
     } else if (currentFormat === "url") {
       if (currentTab === "stats") code = statsUrl;
       else if (currentTab === "langs") code = langsUrl;
-      else if (currentTab === "combo") code = `${statsUrl}\n${langsUrl}`;
+      else if (isCombo) code = `${statsUrl}\n${comboLangsUrl}`;
       else if (currentTab === "pin") code = pinUrl;
     }
 
@@ -140,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (currentTab === "stats") statsContainer.classList.remove("hidden");
       else if (currentTab === "langs") langsContainer.classList.remove("hidden");
-      else if (currentTab === "combo") comboContainer.classList.remove("hidden");
+      else if (currentTab === "combo" || currentTab === "both") comboContainer.classList.remove("hidden");
       else if (currentTab === "pin") pinContainer.classList.remove("hidden");
 
       updateCodeSnippet();
