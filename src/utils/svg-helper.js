@@ -72,81 +72,67 @@ function calculateRank({ totalStars, totalCommits, totalPRs, totalIssues, follow
 }
 
 function getRgbStyles(theme) {
-  const gradientStops = theme.gradient || ["#ff007f", "#7928ca", "#0070f3", "#00dfd8", "#00ff87"];
-  const gradientColors = gradientStops.join(", ");
+  const grad = theme.gradient || ["#ff007f", "#7928ca", "#0070f3", "#00dfd8", "#00ff87"];
+  const c1 = grad[0];
+  const c2 = grad[1] || grad[0];
+  const c3 = grad[2] || grad[1] || grad[0];
 
   return `
-    @keyframes rgbShift {
-      0% {
-        stop-color: ${gradientStops[0]};
-      }
-      25% {
-        stop-color: ${gradientStops[1 % gradientStops.length]};
-      }
-      50% {
-        stop-color: ${gradientStops[2 % gradientStops.length]};
-      }
-      75% {
-        stop-color: ${gradientStops[3 % gradientStops.length]};
-      }
-      100% {
-        stop-color: ${gradientStops[0]};
-      }
-    }
-
-    @keyframes rgbShift2 {
-      0% {
-        stop-color: ${gradientStops[2 % gradientStops.length]};
-      }
-      25% {
-        stop-color: ${gradientStops[3 % gradientStops.length]};
-      }
-      50% {
-        stop-color: ${gradientStops[0]};
-      }
-      75% {
-        stop-color: ${gradientStops[1 % gradientStops.length]};
-      }
-      100% {
-        stop-color: ${gradientStops[2 % gradientStops.length]};
-      }
-    }
-
-    @keyframes rgbRotate {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
     @keyframes pulseGlow {
       0%, 100% {
-        filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.45)) drop-shadow(0 0 16px rgba(255, 0, 127, 0.3));
+        filter: drop-shadow(0 0 6px ${c1}88) drop-shadow(0 0 16px ${c2}55);
       }
       50% {
-        filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.75)) drop-shadow(0 0 28px rgba(255, 0, 127, 0.55));
+        filter: drop-shadow(0 0 14px ${c2}cc) drop-shadow(0 0 28px ${c3}88);
       }
     }
 
-    @keyframes textGlow {
-      0%, 100% {
-        text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-      }
-      50% {
-        text-shadow: 0 0 20px rgba(255, 0, 127, 0.7), 0 0 30px rgba(0, 242, 254, 0.5);
-      }
-    }
-
-    @keyframes statCount {
-      from {
+    @keyframes beamSweep {
+      0% {
+        transform: translateX(-200px) skewX(-25deg);
         opacity: 0;
-        transform: translateY(6px);
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      15% {
+        opacity: 0.65;
+      }
+      40% {
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(750px) skewX(-25deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes haloPulse {
+      0%, 100% {
+        r: 49;
+        stroke-opacity: 0.3;
+        transform: scale(1);
+      }
+      50% {
+        r: 52;
+        stroke-opacity: 0.85;
+        stroke: ${c1};
+        transform: scale(1.03);
+      }
+    }
+
+    @keyframes iconFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+
+    @keyframes barGlowPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 4px ${theme.accentColor}66);
+      }
+      50% {
+        filter: drop-shadow(0 0 12px ${theme.accentColor}cc);
       }
     }
 
@@ -156,12 +142,18 @@ function getRgbStyles(theme) {
       animation: pulseGlow 4s ease-in-out infinite;
     }
 
+    .light-beam {
+      animation: beamSweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+
     .title {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 18px;
       fill: url(#rgb-text-gradient);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      filter: drop-shadow(0 0 8px ${theme.accentColor}55);
     }
 
     .stat-label {
@@ -176,12 +168,22 @@ function getRgbStyles(theme) {
       font-size: 14px;
       font-weight: 700;
       fill: ${theme.textColor};
-      animation: statCount 0.6s ease-out forwards;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
     }
 
     .icon-container {
       fill: url(#rgb-icon-gradient);
-      filter: drop-shadow(0 0 4px ${theme.accentColor}88);
+      filter: drop-shadow(0 0 6px ${theme.accentColor}aa);
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    .rank-halo {
+      fill: none;
+      stroke: url(#rgb-rank-gradient);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 3;
+      transform-origin: center;
+      animation: haloPulse 3s ease-in-out infinite;
     }
 
     .rank-circle-bg {
@@ -195,26 +197,27 @@ function getRgbStyles(theme) {
       stroke: url(#rgb-rank-gradient);
       stroke-width: 6;
       stroke-linecap: round;
-      filter: drop-shadow(0 0 6px ${theme.accentColor});
+      filter: drop-shadow(0 0 10px ${theme.accentColor});
       transition: stroke-dashoffset 1s ease-in-out;
     }
 
     .rank-text {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 800;
-      font-size: 24px;
+      font-weight: 900;
+      font-size: 25px;
       fill: url(#rgb-text-gradient);
       text-anchor: middle;
       dominant-baseline: central;
+      filter: drop-shadow(0 0 12px ${theme.accentColor}aa);
     }
 
     .rank-label {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 10px;
       fill: ${theme.subtextColor};
       text-anchor: middle;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .lang-name {
@@ -227,48 +230,48 @@ function getRgbStyles(theme) {
     .lang-percent {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       fill: ${theme.subtextColor};
     }
 
     .glass-backdrop {
       fill: ${theme.cardBackground};
-      fill-opacity: 0.92;
-      backdrop-filter: blur(12px);
+      fill-opacity: 0.94;
     }
 
-    .accent-bar {
-      fill: url(#rgb-bar-gradient);
-      border-radius: 4px;
-      filter: drop-shadow(0 0 4px ${theme.accentColor}aa);
+    .stacked-bar-glow {
+      animation: barGlowPulse 3s ease-in-out infinite;
     }
   `;
 }
 
-function getRgbDefs(theme) {
+function getRgbDefs(theme, width = 495, height = 210, borderRadius = 16) {
   const grad = theme.gradient || ["#ff007f", "#7928ca", "#0070f3", "#00dfd8", "#00ff87"];
   const c1 = grad[0];
   const c2 = grad[1] || grad[0];
   const c3 = grad[2] || grad[1] || grad[0];
-  const c4 = grad[3] || grad[2] || grad[0];
 
   return `
     <defs>
-      <!-- Animated Border Gradient -->
-      <linearGradient id="rgb-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="${c1}">
-          <animate attributeName="stop-color" values="${grad.join(";")};${c1}" dur="8s" repeatCount="indefinite" />
-        </stop>
-        <stop offset="50%" stop-color="${c2}">
-          <animate attributeName="stop-color" values="${[...grad.slice(1), grad[0]].join(";")};${c2}" dur="8s" repeatCount="indefinite" />
-        </stop>
-        <stop offset="100%" stop-color="${c3}">
-          <animate attributeName="stop-color" values="${[...grad.slice(2), ...grad.slice(0, 2)].join(";")};${c3}" dur="8s" repeatCount="indefinite" />
-        </stop>
+      <!-- Card Boundary Clip for Holographic Light Beam -->
+      <clipPath id="card-clip">
+        <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${borderRadius}" />
+      </clipPath>
+
+      <!-- Cyber Dot Matrix Background Pattern -->
+      <pattern id="cyber-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="0.8" fill="${theme.textColor}" fill-opacity="0.06" />
+      </pattern>
+
+      <!-- Holographic Light Beam Gradient -->
+      <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+        <stop offset="50%" stop-color="#ffffff" stop-opacity="0.15" />
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
       </linearGradient>
 
-      <!-- Animated Text Gradient -->
-      <linearGradient id="rgb-text-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <!-- Animated Border Gradient -->
+      <linearGradient id="rgb-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="${c1}">
           <animate attributeName="stop-color" values="${grad.join(";")};${c1}" dur="6s" repeatCount="indefinite" />
         </stop>
@@ -277,6 +280,19 @@ function getRgbDefs(theme) {
         </stop>
         <stop offset="100%" stop-color="${c3}">
           <animate attributeName="stop-color" values="${[...grad.slice(2), ...grad.slice(0, 2)].join(";")};${c3}" dur="6s" repeatCount="indefinite" />
+        </stop>
+      </linearGradient>
+
+      <!-- Animated Text Gradient -->
+      <linearGradient id="rgb-text-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="${c1}">
+          <animate attributeName="stop-color" values="${grad.join(";")};${c1}" dur="5s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="50%" stop-color="${c2}">
+          <animate attributeName="stop-color" values="${[...grad.slice(1), grad[0]].join(";")};${c2}" dur="5s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="100%" stop-color="${c3}">
+          <animate attributeName="stop-color" values="${[...grad.slice(2), ...grad.slice(0, 2)].join(";")};${c3}" dur="5s" repeatCount="indefinite" />
         </stop>
       </linearGradient>
 
@@ -289,10 +305,10 @@ function getRgbDefs(theme) {
       <!-- Rank Circle Gradient -->
       <linearGradient id="rgb-rank-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="${c1}">
-          <animate attributeName="stop-color" values="${grad.join(";")};${c1}" dur="5s" repeatCount="indefinite" />
+          <animate attributeName="stop-color" values="${grad.join(";")};${c1}" dur="4s" repeatCount="indefinite" />
         </stop>
         <stop offset="100%" stop-color="${c3}">
-          <animate attributeName="stop-color" values="${[...grad.slice(2), ...grad.slice(0, 2)].join(";")};${c3}" dur="5s" repeatCount="indefinite" />
+          <animate attributeName="stop-color" values="${[...grad.slice(2), ...grad.slice(0, 2)].join(";")};${c3}" dur="4s" repeatCount="indefinite" />
         </stop>
       </linearGradient>
 
@@ -302,12 +318,6 @@ function getRgbDefs(theme) {
         <stop offset="50%" stop-color="${c2}" />
         <stop offset="100%" stop-color="${c3}" />
       </linearGradient>
-
-      <!-- Glass Background Filter -->
-      <filter id="rgb-glow-filter" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="4" result="blur" />
-        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-      </filter>
     </defs>
   `;
 }

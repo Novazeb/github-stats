@@ -43,11 +43,17 @@ function renderRepoCard(repo, options = {}) {
           line-height: 1.4;
         }
       </style>
-      ${getRgbDefs(theme)}
+      ${getRgbDefs(theme, width, height, border_radius)}
 
-      <!-- Card Background with Glassmorphism -->
+      <!-- Card Background with Glassmorphism & Cyber Grid -->
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="${theme.background}" />
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" class="glass-backdrop" />
+      <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="url(#cyber-grid)" />
+
+      <!-- Holographic Light Beam Sweep -->
+      <g clip-path="url(#card-clip)">
+        <rect class="light-beam" x="0" y="0" width="80" height="${height}" fill="url(#beam-gradient)" />
+      </g>
       
       <!-- Animated RGB Glowing Border -->
       ${!hide_border ? `<rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="none" class="card-border" />` : ""}

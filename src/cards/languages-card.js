@@ -79,11 +79,17 @@ function renderLanguagesCard(languages, options = {}) {
       <style>
         ${getRgbStyles(theme)}
       </style>
-      ${getRgbDefs(theme)}
+      ${getRgbDefs(theme, width, height, border_radius)}
 
-      <!-- Card Background with Glassmorphism -->
+      <!-- Card Background with Glassmorphism & Cyber Grid -->
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="${theme.background}" />
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" class="glass-backdrop" />
+      <rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="url(#cyber-grid)" />
+
+      <!-- Holographic Light Beam Sweep -->
+      <g clip-path="url(#card-clip)">
+        <rect class="light-beam" x="0" y="0" width="80" height="${height}" fill="url(#beam-gradient)" />
+      </g>
       
       <!-- Animated RGB Glowing Border -->
       ${!hide_border ? `<rect x="2" y="2" width="${width - 4}" height="${height - 4}" rx="${border_radius}" fill="none" class="card-border" />` : ""}
@@ -93,9 +99,11 @@ function renderLanguagesCard(languages, options = {}) {
         <text class="title" x="0" y="0">${escapeXml(title)}</text>
       </g>
 
-      <!-- Stacked RGB Language Progress Bar -->
-      <rect x="25" y="60" width="${progressBarWidth}" height="8" rx="4" fill="${theme.progressBarTrack}" />
-      ${progressSegments}
+      <!-- Stacked RGB Language Progress Bar with Glow -->
+      <g class="stacked-bar-glow">
+        <rect x="25" y="60" width="${progressBarWidth}" height="8" rx="4" fill="${theme.progressBarTrack}" />
+        ${progressSegments}
+      </g>
 
       <!-- Languages Details List -->
       ${langItemsSvg}
